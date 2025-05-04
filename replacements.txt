@@ -1,0 +1,5 @@
+# Remove Supabase URL
+kvjbmkafdjopvgscdjes.supabase.co==>REMOVED_SUPABASE_URL
+
+# Remove old Supabase anon key
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ==>REMOVED_SUPABASE_KEY

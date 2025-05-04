@@ -95,9 +95,9 @@ export default function Home() {
       </nav>
 
       {/* Main Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-6">
         {/* Logo */}
-        <div className="mb-12">
+        <div className="mb-6">
           <Image
             src="/images/flower-logo.png"
             alt="flower. logo"
