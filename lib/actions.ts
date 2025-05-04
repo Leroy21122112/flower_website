@@ -30,8 +30,10 @@ export async function subscribeToNewsletter(
 
     if (!response.ok) {
       const errorBody = await response.text()
+      console.error('Supabase API error response:', errorBody)
       throw new Error(`Supabase error: ${errorBody}`)
     }
+    
 
     return {
       success: true,
