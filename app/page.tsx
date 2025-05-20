@@ -90,7 +90,6 @@ export default function Home() {
         <Link href="https://www.facebook.com/profile.php?id=61575398646073" className="hover:text-gray-400 transition-colors">Facebook</Link>
         <Link href="#" className="hover:text-gray-400 transition-colors">Spotify</Link>
         <Link href="#" className="sm:inline hover:text-gray-400 transition-colors">Apple Music</Link>
-        <Link href="#" className="sm:inline hover:text-gray-400 transition-colors">Twitch</Link>
         <Link href="https://txr0hi-iu.myshopify.com/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
       </nav>
 
