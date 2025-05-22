@@ -9,9 +9,9 @@ export async function subscribeToNewsletter(
 ): Promise<FormState> {
   const email = formData.get('email')?.toString()
   
-  // FIX 1: Get the actual checkbox value, not just if it exists
+  // FIX: Remove the problematic boolean comparison
   const marketingValue = formData.get('marketing')
-  const marketing = marketingValue === 'on' || marketingValue === 'true' || marketingValue === true
+  const marketing = marketingValue === 'on' || marketingValue === 'true'
   
   console.log('Debug - Email:', email)
   console.log('Debug - Marketing raw value:', marketingValue)
@@ -25,7 +25,7 @@ export async function subscribeToNewsletter(
   }
 
   try {
-    // FIX 2: Save BOTH email and marketing consent to Supabase
+    // Save BOTH email and marketing consent to Supabase
     const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/subscribers`, {
       method: 'POST',
       headers: {
@@ -36,7 +36,7 @@ export async function subscribeToNewsletter(
       },
       body: JSON.stringify({ 
         email,
-        marketing_consent: marketing  // ADD THIS LINE
+        marketing_consent: marketing
       }),
     })
 
