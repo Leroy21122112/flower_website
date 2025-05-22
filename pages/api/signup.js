@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Extract email and any other form data
+    // Extract data from request
     const { email, marketing, timestamp, source } = req.body;
 
     // Basic validation
@@ -19,12 +19,13 @@ export default async function handler(req, res) {
     
     if (!makeWebhookUrl) {
       console.error('MAKE_WEBHOOK_URL is not defined in environment variables');
-      // Still return success to the client as we don't want to break the signup flow
       return res.status(200).json({ 
         success: true, 
         message: 'Signup processed, but webhook notification failed due to missing configuration.'
       });
     }
+    
+    console.log('Sending to Make webhook:', makeWebhookUrl);
     
     const response = await fetch(makeWebhookUrl, {
       method: 'POST',
@@ -36,19 +37,25 @@ export default async function handler(req, res) {
         marketing: marketing || false,
         timestamp: timestamp || new Date().toISOString(),
         source: source || 'flower_website',
-        // You can add more fields here if needed by Make
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Failed to send data to Make:', errorText);
+      console.error('Make webhook error:', response.status, errorText);
       throw new Error(`Make webhook error: ${response.status} ${errorText}`);
     }
 
-    return res.status(200).json({ success: true, message: 'Signup data sent to Make successfully' });
+    console.log('Successfully sent data to Make');
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Signup data sent to Make successfully' 
+    });
   } catch (error) {
-    console.error('Signup webhook error:', error);
-    return res.status(500).json({ error: 'Failed to send signup data to Make' });
+    console.error('Signup API error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to send signup data to Make',
+      details: error.message 
+    });
   }
 }
