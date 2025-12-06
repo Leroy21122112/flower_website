@@ -113,7 +113,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-4">
           <div className="text-center mb-4">
             <p className="text-lg sm:text-xl tracking-wider uppercase text-gray-300">
-              Debut EP - <span className="text-white font-semibold">Welcome Home</span> - drops Summer 2025
+              Debut EP - <span className="text-white font-semibold">Welcome Home</span> - drops Dec 9th 2025
             </p>
           </div>
           <Link href="#" className="block transition-opacity hover:opacity-90">
