@@ -1,14 +1,15 @@
-import { createClient } from "@supabase/supabase-js"
-import type { Database } from "@/lib/supabase/database.types"
+// lib/supabase/server.ts
 
-// IMPORTANT: Replace these with your actual Supabase credentials
-// This is a temporary solution to bypass environment variables issues
-const SUPABASE_URL = "https://your-actual-project-id.supabase.co"
-const SUPABASE_ANON_KEY = "your-actual-anon-key"
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/supabase/database.types";
 
-// Server-side Supabase client - only used in Server Components and Server Actions
-export const createServerSupabaseClient = () => {
-  console.log("Creating server Supabase client with hardcoded credentials")
+// Read Supabase credentials from your environment variables
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  return createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY)
-}
+// Create a single server-side Supabase client
+const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Export both a named and default export so all imports work
+export { supabase };
+export default supabase;

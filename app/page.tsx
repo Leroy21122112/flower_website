@@ -7,10 +7,10 @@ import { ArrowRight, Calendar, MapPin, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { subscribeToNewsletter, type FormState } from '@/lib/actions'
 import { useToast } from '@/components/ui/use-toast'
 import { Toaster } from '@/components/toaster'
 import { supabase } from '@/lib/supabase/client'
+import { subscribeToNewsletter } from '@/lib/actions'
 
 type TourDate = {
   id: string
@@ -25,43 +25,9 @@ export default function Home() {
   const [email, setEmail] = useState('')
   const [isChecked, setIsChecked] = useState(false)
   const [isPending, setIsPending] = useState(false)
-  const [formState, setFormState] = useState<FormState>({})
+  const [formState, setFormState] = useState({ success: false, message: '' })
   const [tourDates, setTourDates] = useState<TourDate[]>([])
   const { toast } = useToast()
-
-  useEffect(() => {
-    if (formState.message) {
-      toast({
-        title: formState.success ? 'Success!' : 'Error',
-        description: formState.message,
-        variant: formState.success ? 'default' : 'destructive',
-      })
-
-      if (formState.success) {
-        setEmail('')
-        setIsChecked(false)
-      }
-    }
-  }, [formState, toast])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsPending(true)
-
-    try {
-      const formData = new FormData(e.target as HTMLFormElement)
-      const result = await subscribeToNewsletter(formState, formData)
-      setFormState(result)
-    } catch (error) {
-      console.error('Form submission error:', error)
-      setFormState({
-        success: false,
-        message: 'Something went wrong. Please try again.',
-      })
-    } finally {
-      setIsPending(false)
-    }
-  }
 
   useEffect(() => {
     const fetchTourDates = async () => {
@@ -80,22 +46,57 @@ export default function Home() {
     fetchTourDates()
   }, [])
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsPending(true)
+
+    try {
+      const form = e.target as HTMLFormElement
+      const formData = new FormData(form)
+      formData.set('marketing_consent', String(isChecked))
+
+      const result = await subscribeToNewsletter(null, formData)
+      setFormState(result)
+
+      if (result.success) {
+        toast({
+          title: 'Success!',
+          description: result.message,
+        })
+        setEmail('')
+        setIsChecked(false)
+      } else {
+        toast({
+          title: 'Error',
+          description: result.message,
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsPending(false)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
-      {/* Social Links - now fully responsive */}
       <nav className="flex flex-wrap justify-center items-center py-4 px-4 gap-4 text-sm sm:gap-6 md:gap-8">
-        <Link href="https://www.instagram.com/flowerbandlive/" className="hover:text-gray-400 transition-colors" target="_blank" rel="noopener noreferrer">Instagram</Link>
-        <Link href="https://x.com/flowerbandlive" className="hover:text-gray-400 transition-colors" target="_blank" rel="noopener noreferrer">X</Link>
-        <Link href="https://www.youtube.com/channel/UCJ5-agpiZAK0aemQFFVgELQ" className="hover:text-gray-400 transition-colors">YouTube</Link>
-        <Link href="https://www.facebook.com/profile.php?id=61575398646073" className="hover:text-gray-400 transition-colors">Facebook</Link>
-        <Link href="#" className="hover:text-gray-400 transition-colors">Spotify</Link>
-        <Link href="#" className="sm:inline hover:text-gray-400 transition-colors">Apple Music</Link>
-        <Link href="https://txr0hi-iu.myshopify.com/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
+        <Link href="https://www.instagram.com/flowerbandlive/" target="_blank" rel="noopener noreferrer">Instagram</Link>
+        <Link href="https://x.com/flowerbandlive" target="_blank" rel="noopener noreferrer">X</Link>
+        <Link href="https://www.youtube.com/channel/UCJ5-agpiZAK0aemQFFVgELQ">YouTube</Link>
+        <Link href="https://www.facebook.com/profile.php?id=61575398646073">Facebook</Link>
+        <Link href="#">Spotify</Link>
+        <Link href="#">Apple Music</Link>
+        <Link href="https://txr0hi-iu.myshopify.com/shop">Shop</Link>
       </nav>
 
-      {/* Main Section */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-6">
-        {/* Logo */}
         <div className="mb-6">
           <Image
             src="/images/flower-logo.png"
@@ -108,7 +109,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Album Image Section */}
       <div className="w-full pb-12">
         <div className="max-w-2xl mx-auto px-4">
           <div className="text-center mb-4">
@@ -116,7 +116,6 @@ export default function Home() {
               Debut EP - <span className="text-white font-semibold">Welcome Home</span> - drops Summer 2025
             </p>
           </div>
-
           <Link href="#" className="block transition-opacity hover:opacity-90">
             <Image
               src="/images/welcome-home-album.png"
@@ -130,7 +129,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ✨ Email Signup Section */}
       <section className="w-full bg-zinc-950 py-12 border-t border-b border-zinc-800">
         <div className="max-w-xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
@@ -173,11 +171,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tour Dates Section */}
       <section className="w-full bg-zinc-900 py-16">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl font-bold mb-12 text-center">Tour Dates Coming Soon!</h2>
-
           {tourDates.length === 0 ? (
             <p className="text-center text-gray-400">No upcoming shows yet. Stay tuned!</p>
           ) : (
@@ -217,7 +213,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Toast Notifications */}
       <Toaster />
     </div>
   )
