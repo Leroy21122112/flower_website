@@ -1,219 +1,293 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, Calendar, MapPin, Clock } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useToast } from '@/components/ui/use-toast'
-import { Toaster } from '@/components/toaster'
-import { supabase } from '@/lib/supabase/client'
-import { subscribeToNewsletter } from '@/lib/actions'
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Instagram, Youtube, Mail, MapPin, CalendarDays } from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
 
 type TourDate = {
-  id: string
-  city: string
-  venue: string
-  date: string
-  address?: string
-  time?: string
-}
+  id: string;
+  city: string;
+  venue: string;
+  date: string;
+  address?: string;
+  time?: string;
+};
 
 export default function Home() {
-  const [email, setEmail] = useState('')
-  const [isChecked, setIsChecked] = useState(false)
-  const [isPending, setIsPending] = useState(false)
-  const [formState, setFormState] = useState({ success: false, message: '' })
-  const [tourDates, setTourDates] = useState<TourDate[]>([])
-  const { toast } = useToast()
+  const [tourDates, setTourDates] = useState<TourDate[]>([]);
 
   useEffect(() => {
     const fetchTourDates = async () => {
       const { data, error } = await supabase
-        .from('tour_dates')
-        .select('id, city, venue, date, address, time')
-        .order('date', { ascending: true })
+        .from("tour_dates")
+        .select("*")
+        .order("date", { ascending: true });
 
-      if (error) {
-        console.error('Error fetching tour dates:', error)
-      } else {
-        setTourDates(data || [])
+      if (!error && data) {
+        setTourDates(data);
       }
-    }
+    };
 
-    fetchTourDates()
-  }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsPending(true)
-
-    try {
-      const form = e.target as HTMLFormElement
-      const formData = new FormData(form)
-      formData.set('marketing_consent', String(isChecked))
-
-      const result = await subscribeToNewsletter(null, formData)
-      setFormState(result)
-
-      if (result.success) {
-        toast({
-          title: 'Success!',
-          description: result.message,
-        })
-        setEmail('')
-        setIsChecked(false)
-      } else {
-        toast({
-          title: 'Error',
-          description: result.message,
-          variant: 'destructive',
-        })
-      }
-    } catch (error) {
-      console.error('Form submission error:', error)
-      toast({
-        title: 'Error',
-        description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsPending(false)
-    }
-  }
+    fetchTourDates();
+  }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white">
-      <nav className="flex flex-wrap justify-center items-center py-4 px-4 gap-4 text-sm sm:gap-6 md:gap-8">
-        <Link href="https://www.instagram.com/flowerbandlive/" target="_blank" rel="noopener noreferrer">Instagram</Link>
-        <Link href="https://x.com/flowerbandlive" target="_blank" rel="noopener noreferrer">X</Link>
-        <Link href="https://www.youtube.com/channel/UCJ5-agpiZAK0aemQFFVgELQ">YouTube</Link>
-        <Link href="https://www.facebook.com/profile.php?id=61575398646073">Facebook</Link>
-        <Link href="#">Spotify</Link>
-        <Link href="#">Apple Music</Link>
-        <Link href="https://txr0hi-iu.myshopify.com/shop">Shop</Link>
+    <main className="min-h-screen bg-black text-white">
+      <nav className="w-full border-b border-white/10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+          <div className="flex items-center gap-6 text-sm uppercase tracking-[0.2em] text-white/80">
+            <Link href="/tour" className="hover:text-white transition-colors">
+              Tour
+            </Link>
+            <Link href="/booking" className="hover:text-white transition-colors">
+              Booking
+            </Link>
+            <Link
+              href="https://txr0hi-iu.myshopify.com/shop"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Shop
+            </Link>
+            <a
+              href="mailto:flowerbandlive@gmail.com"
+              className="hover:text-white transition-colors"
+            >
+              Contact
+            </a>
+          </div>
+
+          <div className="flex items-center gap-4 text-white/70">
+            <a
+              href="https://www.instagram.com/flowerbandlive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+              aria-label="Instagram"
+            >
+              <Instagram size={18} />
+            </a>
+            <a
+              href="https://www.youtube.com/@flowerbandlive"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+              aria-label="YouTube"
+            >
+              <Youtube size={18} />
+            </a>
+          </div>
+        </div>
       </nav>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-6">
-        <div className="mb-6">
-          <Image
-            src="/images/flower-logo.png"
-            alt="flower. logo"
-            width={400}
-            height={400}
-            className="mx-auto"
-            priority
-          />
-        </div>
-      </main>
-
-      <div className="w-full pb-12">
-        <div className="max-w-2xl mx-auto px-4">
-          <div className="text-center mb-4">
-            <p className="text-lg sm:text-xl tracking-wider uppercase text-gray-300">
-              Debut EP - <span className="text-white font-semibold">Welcome Home</span> - drops Dec 9th 2025
-            </p>
-          </div>
-          <Link href="#" className="block transition-opacity hover:opacity-90">
+      <section className="flex min-h-[85vh] items-center justify-center px-6 py-20">
+        <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
+          <div className="mb-8">
             <Image
-              src="/images/welcome-home-album.png"
-              alt="flower. - Welcome Home album cover"
-              width={1200}
-              height={1200}
-              className="w-full h-auto"
+              src="/images/flower-logo.png"
+              alt="flower. logo"
+              width={700}
+              height={220}
               priority
+              className="mx-auto h-auto w-full max-w-[520px]"
             />
-          </Link>
-        </div>
-      </div>
+          </div>
 
-      <section className="w-full bg-zinc-950 py-12 border-t border-b border-zinc-800">
-        <div className="max-w-xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex items-center border-b border-white">
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-transparent border-none text-white placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 py-2 px-0 w-full"
-              />
-              <Button
-                type="submit"
-                variant="ghost"
-                disabled={isPending}
-                className="text-white hover:bg-transparent hover:text-gray-300 disabled:opacity-50"
-              >
-                {isPending ? 'Submitting...' : 'Submit'}
-                {!isPending && <ArrowRight className="ml-2 h-4 w-4" />}
-              </Button>
-            </div>
+          <p className="mb-8 text-sm uppercase tracking-[0.35em] text-white/70 sm:text-base">
+            Alt Shoegaze Metal • Houston TX
+          </p>
 
-            <div className="flex items-start space-x-3 justify-center">
-              <Checkbox
-                id="marketing"
-                name="marketing"
-                checked={isChecked}
-                onCheckedChange={(checked) => setIsChecked(checked as boolean)}
-                className="border-white data-[state=checked]:bg-white data-[state=checked]:text-black"
-              />
-              <label htmlFor="marketing" className="text-sm leading-tight text-gray-300 text-left max-w-md">
-                I want to receive updates about Flower. Unsubscribe at any time. View our{' '}
-                <Link href="/privacy" className="underline hover:text-gray-300">Privacy Policy</Link>.
-              </label>
-            </div>
-          </form>
+         
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="https://open.spotify.com/album/5FBDkZe5NpfiaSWqwk3147"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-white hover:text-black"
+            >
+              Listen Now
+            </a>
+
+            <Link
+              href="/booking"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+            >
+              Booking
+            </Link>
+
+            <Link
+              href="https://txr0hi-iu.myshopify.com/shop"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+            >
+              Shop
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="w-full bg-zinc-900 py-16">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center">Tour Dates Coming Soon!</h2>
-          {tourDates.length === 0 ? (
-            <p className="text-center text-gray-400">No upcoming shows yet. Stay tuned!</p>
-          ) : (
-            <div className="space-y-6">
-              {tourDates.map((event) => (
+      <section className="border-t border-white/10 px-6 py-20">
+        <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:items-center">
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-[0.3em] text-white/50">
+              Current Release
+            </p>
+
+            <h2 className="mb-6 text-4xl font-semibold uppercase tracking-[0.12em] sm:text-5xl">
+              Welcome Home
+            </h2>
+
+            <p className="mb-8 max-w-xl text-base leading-8 text-white/80 sm:text-lg">
+              Stream the latest release from flower. and stay connected for new music,
+              live dates, and upcoming announcements.
+            </p>
+
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="https://open.spotify.com/album/5FBDkZe5NpfiaSWqwk3147"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-white hover:text-black"
+              >
+                Spotify
+              </a>
+
+              <a
+                href="https://www.youtube.com/@flowerbandlive"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-white/30 px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+              >
+                YouTube
+              </a>
+
+              <Link
+                href="/booking"
+                className="rounded-full border border-white/30 px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+              >
+                Booking
+              </Link>
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
+            <div className="aspect-square rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-8 flex flex-col items-center justify-center text-center">
+              <Image
+                src="/images/flower-logo.png"
+                alt="flower. logo"
+                width={420}
+                height={160}
+                className="mb-6 h-auto w-full max-w-[300px]"
+              />
+              <p className="text-sm uppercase tracking-[0.35em] text-white/50">
+                Welcome Home
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 px-6 py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10">
+            <p className="mb-3 text-sm uppercase tracking-[0.3em] text-white/50">
+              Tour / Live
+            </p>
+            <h2 className="text-3xl font-semibold uppercase tracking-[0.12em] sm:text-4xl">
+              Upcoming Dates
+            </h2>
+          </div>
+
+          {tourDates.length > 0 ? (
+            <div className="space-y-4">
+              {tourDates.map((show) => (
                 <div
-                  key={event.id}
-                  className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border-b border-zinc-800"
+                  key={show.id}
+                  className="grid gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:grid-cols-[160px_1fr_auto]"
                 >
-                  <div className="flex-1 mb-4 md:mb-0">
-                    <div className="flex items-center mb-2">
-                      <Calendar className="h-4 w-4 mr-2 opacity-70" />
-                      <span className="text-lg">{new Date(event.date).toLocaleDateString()}</span>
-                    </div>
-                    <h3 className="text-xl font-semibold">{event.venue}</h3>
-                    <div className="flex items-center mt-1 text-zinc-400">
-                      <MapPin className="h-4 w-4 mr-2" />
-                      <span>{event.city}</span>
-                    </div>
-                    {event.address && (
-                      <div className="flex items-center mt-1 text-zinc-400">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span>{event.address}</span>
-                      </div>
+                  <div className="flex items-center gap-2 text-white/70">
+                    <CalendarDays size={16} />
+                    <span>{show.date}</span>
+                  </div>
+
+                  <div>
+                    <p className="text-lg font-medium text-white">
+                      {show.venue}
+                    </p>
+                    <p className="flex items-center gap-2 text-white/70">
+                      <MapPin size={16} />
+                      {show.city}
+                    </p>
+                    {show.time && (
+                      <p className="mt-1 text-sm text-white/50">{show.time}</p>
                     )}
-                    {event.time && (
-                      <div className="flex items-center mt-1 text-zinc-400">
-                        <Clock className="h-4 w-4 mr-2" />
-                        <span>{event.time}</span>
-                      </div>
-                    )}
+                  </div>
+
+                  <div className="flex items-center">
+                    <a
+                      href="mailto:flowerbandlive@gmail.com"
+                      className="rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+                    >
+                      Inquire
+                    </a>
                   </div>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center">
+              <p className="mb-3 text-lg text-white">
+                Now booking Houston, Texas and regional dates.
+              </p>
+              <p className="mb-6 text-white/70">
+                For support slots, festivals, club shows, and touring inquiries:
+              </p>
+              <a
+                href="mailto:flowerbandlive@gmail.com"
+                className="inline-flex items-center gap-2 rounded-full border border-white px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-white hover:text-black"
+              >
+                <Mail size={16} />
+                flowerbandlive@gmail.com
+              </a>
             </div>
           )}
         </div>
       </section>
 
-      <Toaster />
-    </div>
-  )
+      <section className="border-t border-white/10 px-6 py-20">
+        <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-white/[0.03] p-10 text-center">
+          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-white/50">
+            Booking
+          </p>
+          <h2 className="mb-6 text-3xl font-semibold uppercase tracking-[0.12em] sm:text-4xl">
+            Let’s Build Something Loud
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
+            flower. is available for clubs, support slots, festivals, private events,
+            regional runs, and touring opportunities.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/booking"
+              className="rounded-full border border-white px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-white hover:text-black"
+            >
+              View Booking Page
+            </Link>
+
+            <a
+              href="mailto:flowerbandlive@gmail.com"
+              className="rounded-full border border-white/30 px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:border-white hover:bg-white hover:text-black"
+            >
+              Email Booking
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
