@@ -79,14 +79,7 @@ export default function BookingPage() {
                 YouTube
               </a>
 
-              <a
-                href="https://www.flowerband.live"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-white underline underline-offset-4 hover:text-white/80"
-              >
-                flowerband.live
-              </a>
+              
             </div>
           </div>
         </div>
