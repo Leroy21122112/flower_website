@@ -42,8 +42,8 @@ export default function Home() {
               Tour
             </Link>
             <Link href="/booking" className="hover:text-white transition-colors">
-              Booking
-            </Link>
+  Booking
+</Link>
             <Link
               href="https://txr0hi-iu.myshopify.com/shop"
               target="_blank"
@@ -52,12 +52,7 @@ export default function Home() {
             >
               Shop
             </Link>
-            <a
-              href="mailto:flowerbandlive@gmail.com"
-              className="hover:text-white transition-colors"
-            >
-              Contact
-            </a>
+           
           </div>
 
           <div className="flex items-center gap-4 text-white/70">
