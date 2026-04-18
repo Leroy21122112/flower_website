@@ -17,7 +17,7 @@ export default function BookingPage() {
           <p className="max-w-3xl mx-auto text-base md:text-lg text-white/80 leading-8">
             <span className="font-semibold text-white">flower.</span> is a Houston, Texas based
             alt shoegaze metal project blending heaviness, atmosphere, and melody into a sound
-            inspired by Deftones, Smashing Pumpkins, and Nirvana.
+            inspired by Deftones, Hum, and Nothing.
           </p>
         </div>
 
