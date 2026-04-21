@@ -172,7 +172,7 @@ export default function Home() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
             <div className="aspect-square rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-8 flex flex-col items-center justify-center text-center">
               <Image
-                src="/images/flower-logo.png"
+                src="/images/welcome-home-album.png"
                 alt="flower. logo"
                 width={420}
                 height={160}
@@ -259,7 +259,7 @@ export default function Home() {
             Booking
           </p>
           <h2 className="mb-6 text-3xl font-semibold uppercase tracking-[0.12em] sm:text-4xl">
-            Let’s Build Something Loud
+            Let’s Connect
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
             flower. is available for clubs, support slots, festivals, private events,
