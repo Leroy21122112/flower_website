@@ -42,8 +42,8 @@ export default function Home() {
               Tour
             </Link>
             <Link href="/booking" className="hover:text-white transition-colors">
-  Booking
-</Link>
+              Booking
+            </Link>
             <Link
               href="https://txr0hi-iu.myshopify.com/shop"
               target="_blank"
@@ -52,7 +52,6 @@ export default function Home() {
             >
               Shop
             </Link>
-           
           </div>
 
           <div className="flex items-center gap-4 text-white/70">
@@ -95,7 +94,6 @@ export default function Home() {
             Alt Shoegaze Metal • Houston TX
           </p>
 
-         
           <div className="flex flex-wrap items-center justify-center gap-4">
             <a
               href="https://open.spotify.com/album/5FBDkZe5NpfiaSWqwk3147"
@@ -169,19 +167,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
-            <div className="aspect-square rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-8 flex flex-col items-center justify-center text-center">
-             <Image
-  src="/images/welcome-home-album.png"
-  alt="Welcome Home album cover"
-  width={520}
-  height={520}
-  className="h-auto w-full max-w-[420px]"
-/>
-<p className="mt-6 text-sm uppercase tracking-[0.35em] text-white/50">
-  Welcome Home
-</p>
-            </div>
+          <div className="flex flex-col items-center text-center">
+            <Image
+              src="/images/welcome-home-album.png"
+              alt="Welcome Home album cover"
+              width={520}
+              height={520}
+              className="h-auto w-full max-w-[420px]"
+            />
+            <p className="mt-6 text-sm uppercase tracking-[0.35em] text-white/50">
+              Welcome Home
+            </p>
           </div>
         </div>
       </section>
@@ -210,9 +206,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <p className="text-lg font-medium text-white">
-                      {show.venue}
-                    </p>
+                    <p className="text-lg font-medium text-white">{show.venue}</p>
                     <p className="flex items-center gap-2 text-white/70">
                       <MapPin size={16} />
                       {show.city}
