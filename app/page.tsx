@@ -171,16 +171,16 @@ export default function Home() {
 
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8">
             <div className="aspect-square rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-8 flex flex-col items-center justify-center text-center">
-              <Image
-                src="/images/welcome-home-album.png"
-                alt="flower. logo"
-                width={420}
-                height={160}
-                className="mb-6 h-auto w-full max-w-[300px]"
-              />
-              <p className="text-sm uppercase tracking-[0.35em] text-white/50">
-                Welcome Home
-              </p>
+             <Image
+  src="/images/welcome-home-album.png"
+  alt="Welcome Home album cover"
+  width={520}
+  height={520}
+  className="h-auto w-full max-w-[420px]"
+/>
+<p className="mt-6 text-sm uppercase tracking-[0.35em] text-white/50">
+  Welcome Home
+</p>
             </div>
           </div>
         </div>
